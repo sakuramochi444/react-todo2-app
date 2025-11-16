@@ -292,8 +292,7 @@ const App = () => {
       // ◀◀◀ h-screen, overflow-hidden, flex flex-col を追加
       className="h-screen w-full bg-cover bg-fixed bg-center overflow-hidden flex flex-col"
       style={{
-        backgroundImage:
-          "url('https://www.publicdomainpictures.net/pictures/30000/velka/cork-texture.jpg')",
+        backgroundImage: "url('/koruku.jpg')",
       }}
     >
       {/* ◀◀◀ container を削除、pt-4 を追加 */}
