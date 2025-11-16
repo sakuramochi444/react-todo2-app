@@ -12,7 +12,8 @@ import {
 import { twMerge } from "tailwind-merge";
 import { initTodos } from "./initTodos";
 import { v4 as uuid } from "uuid";
-import Draggable, { DraggableEvent, DraggableData } from "react-draggable";
+import Draggable, { type DraggableEvent, type DraggableData } from "react-draggable";
+import type { Todo } from "./types";
 
 // ... (getPriorityColor, DraggableTodoItem は変更なし) ...
 const getPriorityColor = (priority: number): string => {
