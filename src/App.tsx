@@ -14,6 +14,7 @@ import { initTodos } from "./initTodos";
 import { v4 as uuid } from "uuid";
 import Draggable, { type DraggableEvent, type DraggableData } from "react-draggable";
 import type { Todo } from "./types";
+import corkTexture from "./assets/koruku.jpg";
 
 // ... (getPriorityColor, DraggableTodoItem は変更なし) ...
 const getPriorityColor = (priority: number): string => {
@@ -292,7 +293,7 @@ const App = () => {
       // ◀◀◀ h-screen, overflow-hidden, flex flex-col を追加
       className="h-screen w-full bg-cover bg-fixed bg-center overflow-hidden flex flex-col"
       style={{
-        backgroundImage: "url('/koruku.jpg')",
+        backgroundImage: `url(${corkTexture})`,
       }}
     >
       {/* ◀◀◀ container を削除、pt-4 を追加 */}
