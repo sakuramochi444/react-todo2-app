@@ -1,4 +1,4 @@
 import type { Todo } from "./types";
-import { v4 as uuid } from "uuid"; // v4 を uuid という名前でインポート
+import { v4 as uuid } from "uuid";
 
 export const initTodos: Todo[] = [];

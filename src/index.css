@@ -1,7 +1,6 @@
 body {
-  background-color: #faebd7; /* ノートの紙の色（アンティークホワイト） */
+  background-color: #faebd7;
 
-  /* ◀◀◀ 罫線（青）と行線（赤）を追加 */
   background-image: linear-gradient(
       90deg,
       rgba(255, 100, 100, 0.3) 1px,
@@ -10,10 +9,9 @@ body {
     linear-gradient(180deg, rgba(100, 100, 255, 0.4) 1px, transparent 1px);
   background-size:
     40px 1.8em,
-    /* 縦線（赤）の間隔 */ 40px 1.8em; /* 横線（青）の間隔 */
+    40px 1.8em;
   line-height: 1.8em;
-  background-position: 20px 0; /* 縦線の開始位置を調整 */
-  /* ◀◀◀ ここまで */
+  background-position: 20px 0;
 }
 
 @import "tailwindcss";

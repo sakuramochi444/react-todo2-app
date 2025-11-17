@@ -12,11 +12,7 @@ import { initTodos } from "./initTodos";
 import { v4 as uuid } from "uuid";
 import Draggable, { type DraggableEvent, type DraggableData } from "react-draggable";
 import type { Todo } from "./types";
-// import corkTexture from "./assets/koruku.jpg"; // 背景画像は現在コメントアウト中
 
-/**
- * 優先度（数値）を Tailwind の bg-color クラス名に変換します。
- */
 const getPriorityColor = (priority: number): string => {
   switch (priority) {
     case 1:
@@ -37,16 +33,15 @@ type DraggableTodoItemProps = {
   onDragStart: (id: string) => void;
   onDragStop: (id: string, e: DraggableEvent, data: DraggableData) => void;
   onToggleDone: (id: string) => void;
-  zIndex: number; // ◀◀◀ zIndex を props で受け取る
+  zIndex: number;
 };
 
-// ◀◀◀ DraggableTodoItem を変更
 const DraggableTodoItem = ({
   todo,
   onDragStart,
   onDragStop,
   onToggleDone,
-  zIndex, // ◀◀◀ props で受け取る
+  zIndex,
 }: DraggableTodoItemProps) => {
   const nodeRef = useRef(null);
 
@@ -61,35 +56,34 @@ const DraggableTodoItem = ({
     <Draggable
       bounds="parent"
       nodeRef={nodeRef}
-      position={{ x: todo.x, y: todo.y }} // Draggableが位置(translate)を制御
-      onStart={() => onDragStart(todo.id)} // ◀◀◀ onDragStart に id を渡す
+      position={{ x: todo.x, y: todo.y }}
+      onStart={() => onDragStart(todo.id)}
       onStop={handleDragStop}
     >
-      {/* 1. 位置制御用の外枠 (回転させない) */}
+      {/*1. 位置制御用の外枠*/}
       <div
         ref={nodeRef}
-        className="absolute cursor-move w-64 h-48" // サイズ固定
+        className="absolute cursor-move w-64 h-48"
         style={{
-          zIndex: zIndex, // ◀◀◀ zIndex を style に適用
-          // ここには transform: rotate を指定しない
+          zIndex: zIndex,
         }}
       >
-        {/* 2. 見た目と回転用の内枠 (背景・枠線・回転) */}
+        {/*2. 見た目と回転用の内枠*/}
         <div
           className={twMerge(
             "relative w-full h-full rounded-md border border-gray-400 shadow-lg box-border",
-            "flex flex-col", // flexコンテナ化
+            "flex flex-col",
             getPriorityColor(todo.priority),
             todo.isDone && "bg-gray-300 opacity-70 line-through grayscale",
             isOverdue && "border-2 border-orange-600"
           )}
           style={{
-            transform: `rotate(${todo.rotate}deg)`, // ここで回転させる
+            transform: `rotate(${todo.rotate}deg)`,
           }}
         >
-          {/* 3. 実際にスクロールするコンテンツエリア */}
+          {/*3. 実際にスクロールするコンテンツエリア */}
           <div className="flex-1 overflow-auto p-3">
-            {/* --- コンテンツ --- */}
+            {/*コンテンツ*/}
             {todo.isDone && (
               <div className="mb-2 rounded bg-gray-500 px-2 py-0.5 text-center text-xs text-white">
                 <FontAwesomeIcon icon={faFaceGrinWide} className="mr-1.5" />
@@ -109,7 +103,7 @@ const DraggableTodoItem = ({
                 type="checkbox"
                 checked={todo.isDone}
                 onChange={() => onToggleDone(todo.id)}
-                onMouseDown={(e) => e.stopPropagation()} // チェックボックスクリック時にドラッグを開始させない
+                onMouseDown={(e) => e.stopPropagation()}
                 className="mr-2 h-5 w-5 flex-shrink-0"
               />
               <div
@@ -138,13 +132,13 @@ const DraggableTodoItem = ({
               </div>
             )}
 
-            {/* 説明表示 */}
+            {/*説明表示 */}
             {todo.description && (
               <div className="mt-2 text-sm text-slate-700 whitespace-pre-wrap break-words">
                 {todo.description}
               </div>
             )}
-            {/* --- コンテンツ終 --- */}
+            {/*コンテンツ終*/}
           </div>
         </div>
       </div>
@@ -152,22 +146,16 @@ const DraggableTodoItem = ({
   );
 };
 
-
-// ----------------------------------------------------------------
-// ★ TodoList (zIndices を受け取るように変更)
-// ----------------------------------------------------------------
 type TodoListProps = {
   todos: Todo[];
-  zIndices: Record<string, number>; // ◀◀◀ 追加
+  zIndices: Record<string, number>;
   onDragStart: (id: string) => void;
   onDragStop: (id: string, e: DraggableEvent, data: DraggableData) => void;
   onToggleDone: (id: string) => void;
 };
 
 const TodoList = (props: TodoListProps) => {
-  const { todos, zIndices, onDragStart, onDragStop, onToggleDone } = props; // ◀◀◀ zIndices を受け取る
-
-  // const priorityMultiplier = todos.length; // ◀◀◀ 削除 (zIndex管理方法の変更)
+  const { todos, zIndices, onDragStart, onDragStop, onToggleDone } = props;
 
   return (
     <div className="relative h-full w-full"> 
@@ -176,18 +164,17 @@ const TodoList = (props: TodoListProps) => {
           登録されているタスクはありません。
         </div>
       )}
-      {todos.map((todo) => { // ◀◀◀ index は不要になった
-        // const zIndex = (5 - todo.priority) * priorityMultiplier + index; // ◀◀◀ 削除
-        const zIndex = zIndices[todo.id] || 1; // ◀◀◀ zIndices Mapから取得
+      {todos.map((todo) => {
+        const zIndex = zIndices[todo.id] || 1;
 
         return (
           <DraggableTodoItem
             key={todo.id}
             todo={todo}
-            onDragStart={onDragStart} // ◀◀◀ id は DraggableTodoItem 側で渡す
+            onDragStart={onDragStart}
             onDragStop={onDragStop}
             onToggleDone={onToggleDone}
-            zIndex={zIndex} // ◀◀◀ 計算済みの zIndex を渡す
+            zIndex={zIndex}
           />
         );
       })}
@@ -197,9 +184,6 @@ const TodoList = (props: TodoListProps) => {
 
 const num2star = (n: number): string => "★".repeat(4 - n);
 
-// ----------------------------------------------------------------
-// ★ App (zIndex管理ロジックを追加)
-// ----------------------------------------------------------------
 const App = () => {
   const [todos, setTodos] = useState<Todo[]>(() => {
     const savedTodos = localStorage.getItem("todos");
@@ -228,26 +212,22 @@ const App = () => {
   const [isDragging, setIsDragging] = useState(false);
   const trashAreaRef = useRef<HTMLDivElement>(null);
 
-  // ◀◀◀ zIndex 管理用の State を追加
   const [zIndices, setZIndices] = useState<Record<string, number>>({});
-  const [zCounter, setZCounter] = useState(1); // 常に最大のz-index+1を保持
+  const [zCounter, setZCounter] = useState(1);
 
-  // ◀◀◀ todos が変更されたら zIndices を初期化・更新
   useEffect(() => {
     setZIndices(prev => {
       const newZIndices: Record<string, number> = {};
       let maxZ = 0;
       todos.forEach((todo, index) => {
-        // 既存のz-indexを維持、なければindex+1を割り当て
         const z = prev[todo.id] || index + 1;
         newZIndices[todo.id] = z;
         maxZ = Math.max(maxZ, z);
       });
-      // zCounter を現在の最大値+1に更新
       setZCounter(maxZ + 1);
       return newZIndices;
     });
-  }, [todos]); // todos 配列自体が変わった時（追加・削除時）に実行
+  }, [todos]);
 
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
@@ -279,24 +259,20 @@ const App = () => {
     setDescription("");
   };
 
-  // ◀◀◀ handleDragStart を変更 (id を受け取る)
   const handleDragStart = (id: string) => {
     let newZ = zCounter + 1;
     
-    // フォーム(z-20)より下(19)に抑える
     if (newZ > 19) {
-      // 19を超えたら、z-indexを正規化（リセット）
       const sortedIds = Object.keys(zIndices).sort((a, b) => (zIndices[a] || 0) - (zIndices[b] || 0));
       const newZIndices: Record<string, number> = {};
       sortedIds.forEach((key, index) => {
-        newZIndices[key] = index + 1; // 1から再割り当て
+        newZIndices[key] = index + 1;
       });
-      newZ = sortedIds.length + 1; // 19以下になる
-      newZIndices[id] = newZ; // クリックしたものを最前面に
+      newZ = sortedIds.length + 1;
+      newZIndices[id] = newZ;
       setZIndices(newZIndices);
       setZCounter(newZ);
     } else {
-      // 19以下ならそのままインクリメント
       setZIndices(prev => ({ ...prev, [id]: newZ }));
       setZCounter(newZ);
     }
@@ -329,8 +305,7 @@ const App = () => {
     if (isOverTrash) {
       setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
     } else {
-      // ゴミ箱以外でドロップされた時、角度をランダムに更新
-      const newRotate = Math.random() * 20 - 10; // -10度から+10度の範囲
+      const newRotate = Math.random() * 20 - 10;
 
       setTodos((prevTodos) =>
         prevTodos.map((todo) =>
@@ -358,15 +333,15 @@ const App = () => {
         宿題管理ノート
       </h1>
 
-      {/* ◀◀◀ フォーム: z-10 -> z-20 に変更 */}
+      {/*フォーム*/}
       <form
         onSubmit={handleSubmit}
         className="fixed top-20 left-4 z-20 max-w-sm rounded-lg border border-gray-400 bg-amber-100 p-4 shadow-lg"
       >
-        {/* フォーム内部は変更なし */}
+        {/*フォーム内部は変更なし*/}
         <div className="flex flex-col gap-4">
           
-          {/* タスク名 */}
+          {/*タスク名*/}
           <div>
             <label
               htmlFor="taskName"
@@ -384,7 +359,7 @@ const App = () => {
             />
           </div>
 
-          {/* 優先度 */}
+          {/*優先度*/}
           <div>
             <label
               htmlFor="priority"
@@ -405,7 +380,7 @@ const App = () => {
             </select>
           </div>
 
-          {/* 期限 */}
+          {/*期限*/}
           <div>
             <label
               htmlFor="deadline"
@@ -422,7 +397,7 @@ const App = () => {
             />
           </div>
 
-          {/* 説明 (任意) */}
+          {/*説明*/}
           <div>
             <label
               htmlFor="description"
@@ -440,7 +415,7 @@ const App = () => {
             />
           </div>
 
-          {/* 追加ボタン */}
+          {/*追加ボタン*/}
           <div>
             <button
               type="submit"
@@ -453,24 +428,24 @@ const App = () => {
         </div>
       </form>
 
-      {/* ◀◀◀ 付箋エリア: pl-[26rem] を削除し、p-8 に戻す */}
+      {/*付箋エリア*/}
       <div className="flex-grow relative overflow-hidden p-8">
         <TodoList
           todos={todos}
-          zIndices={zIndices} // ◀◀◀ zIndices を渡す
+          zIndices={zIndices}
           onDragStart={handleDragStart}
           onDragStop={handleDragStop}
           onToggleDone={handleToggleDone}
         />
       </div>
 
-      {/* ◀◀◀ ゴミ箱: z-20 -> z-30, isDragging: z-40 に変更 */}
+      {/*ゴミ箱*/}
       <div
         ref={trashAreaRef}
         className={twMerge(
           "fixed bottom-8 right-8 flex h-32 w-32 items-center justify-center rounded-full bg-gray-400 text-white shadow-lg transition-all duration-300",
-          "z-30", // 通常時
-          isDragging && "scale-125 bg-red-500 z-40" // ドラッグ中
+          "z-30",
+          isDragging && "scale-125 bg-red-500 z-40"
         )}
       >
         <FontAwesomeIcon icon={faTrash} size="3x" />
