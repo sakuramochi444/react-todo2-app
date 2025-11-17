@@ -330,7 +330,7 @@ const App = () => {
       className="h-screen w-full bg-cover bg-fixed bg-center overflow-hidden flex flex-col"
     >
       <h1 className="mb-4 text-center text-3xl font-bold text-gray-700 pt-4 relative z-10">
-        宿題管理ノート
+        Todoリスト
       </h1>
 
       {/*フォーム*/}
@@ -347,7 +347,7 @@ const App = () => {
               htmlFor="taskName"
               className="mb-1 block text-sm font-medium text-gray-700"
             >
-              新しい宿題:
+              タスク名:
             </label>
             <input
               id="taskName"
@@ -373,10 +373,10 @@ const App = () => {
               onChange={(e) => setPriority(Number(e.target.value))}
               className="w-full appearance-none rounded-md border-b-2 border-dashed border-gray-400 bg-transparent px-3 py-2 text-gray-800 focus:outline-none focus:border-yellow-500"
             >
-              <option value={1}>1 (最高)</option>
+              <option value={1}>3 (最高)</option>
               <option value={2}>2 (高)</option>
-              <option value={3}>3 (中)</option>
-              <option value={4}>4 (低)</option>
+              <option value={3}>1 (中)</option>
+              <option value={4}>0 (低)</option>
             </select>
           </div>
 
