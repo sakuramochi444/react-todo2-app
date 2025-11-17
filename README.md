@@ -13,11 +13,6 @@ https://sakuramochi444.github.io/react-todo2-app/
 - 期限切れハイライト
 - ローカルストレージでのデータ永続化
 
-
-## あとがき
-
-
-
 !["Todo画像1"](images/todo1.png)
 !["Todo画像2"](images/todo2.png)
 !["Todo画像3"](images/todo3.png)
