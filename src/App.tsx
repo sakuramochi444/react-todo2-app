@@ -6,6 +6,8 @@ import {
   faFaceGrinWide,
   faTrash,
   faExclamationTriangle,
+  faBars,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { twMerge } from "tailwind-merge";
 import { initTodos } from "./initTodos";
@@ -60,7 +62,6 @@ const DraggableTodoItem = ({
       onStart={() => onDragStart(todo.id)}
       onStop={handleDragStop}
     >
-      {/*1. 位置制御用の外枠*/}
       <div
         ref={nodeRef}
         className="absolute cursor-move w-64 h-48"
@@ -68,7 +69,6 @@ const DraggableTodoItem = ({
           zIndex: zIndex,
         }}
       >
-        {/*2. 見た目と回転用の内枠*/}
         <div
           className={twMerge(
             "relative w-full h-full rounded-md border border-gray-400 shadow-lg box-border",
@@ -81,9 +81,7 @@ const DraggableTodoItem = ({
             transform: `rotate(${todo.rotate}deg)`,
           }}
         >
-          {/*3. 実際にスクロールするコンテンツエリア */}
           <div className="flex-1 overflow-auto p-3">
-            {/*コンテンツ*/}
             {todo.isDone && (
               <div className="mb-2 rounded bg-gray-500 px-2 py-0.5 text-center text-xs text-white">
                 <FontAwesomeIcon icon={faFaceGrinWide} className="mr-1.5" />
@@ -132,13 +130,11 @@ const DraggableTodoItem = ({
               </div>
             )}
 
-            {/*説明表示 */}
             {todo.description && (
               <div className="mt-2 text-sm text-slate-700 whitespace-pre-wrap break-words">
                 {todo.description}
               </div>
             )}
-            {/*コンテンツ終*/}
           </div>
         </div>
       </div>
@@ -158,7 +154,7 @@ const TodoList = (props: TodoListProps) => {
   const { todos, zIndices, onDragStart, onDragStop, onToggleDone } = props;
 
   return (
-    <div className="relative h-full w-full"> 
+    <div className="relative h-full w-full">
       {todos.length === 0 && (
         <div className="text-center text-gray-500 pt-10">
           登録されているタスクはありません。
@@ -209,6 +205,7 @@ const App = () => {
   const [priority, setPriority] = useState(2);
   const [deadlineInput, setDeadlineInput] = useState("");
   const [description, setDescription] = useState("");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const trashAreaRef = useRef<HTMLDivElement>(null);
 
@@ -257,11 +254,12 @@ const App = () => {
     setPriority(2);
     setDeadlineInput("");
     setDescription("");
+    setIsMenuOpen(false);
   };
 
   const handleDragStart = (id: string) => {
     let newZ = zCounter + 1;
-    
+
     if (newZ > 19) {
       const sortedIds = Object.keys(zIndices).sort((a, b) => (zIndices[a] || 0) - (zIndices[b] || 0));
       const newZIndices: Record<string, number> = {};
@@ -276,7 +274,7 @@ const App = () => {
       setZIndices(prev => ({ ...prev, [id]: newZ }));
       setZCounter(newZ);
     }
-    
+
     setIsDragging(true);
   };
 
@@ -333,15 +331,32 @@ const App = () => {
         Todoリスト
       </h1>
 
-      {/*フォーム*/}
+      <button
+        onClick={() => setIsMenuOpen(true)}
+        className="fixed top-4 left-4 z-30 h-12 w-12 rounded-full bg-amber-200 text-gray-700 shadow-lg hover:bg-amber-300 focus:outline-none"
+      >
+        <FontAwesomeIcon icon={faBars} size="lg" />
+      </button>
+
       <form
         onSubmit={handleSubmit}
-        className="fixed top-20 left-4 z-20 max-w-sm rounded-lg border border-gray-400 bg-amber-100 p-4 shadow-lg"
+        className={twMerge(
+          "fixed top-0 left-0 z-40 h-full w-full max-w-sm transform overflow-y-auto rounded-r-lg border-r border-gray-400 bg-amber-100 p-4 shadow-lg transition-transform duration-300 ease-in-out",
+          isMenuOpen ? "translate-x-0" : "-translate-x-full"
+        )}
       >
-        {/*フォーム内部は変更なし*/}
         <div className="flex flex-col gap-4">
-          
-          {/*タスク名*/}
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-xl font-bold text-gray-700">タスクの追加</h2>
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen(false)}
+              className="h-10 w-10 text-gray-600 hover:text-gray-800"
+            >
+              <FontAwesomeIcon icon={faTimes} size="lg" />
+            </button>
+          </div>
+
           <div>
             <label
               htmlFor="taskName"
@@ -359,7 +374,6 @@ const App = () => {
             />
           </div>
 
-          {/*優先度*/}
           <div>
             <label
               htmlFor="priority"
@@ -380,7 +394,6 @@ const App = () => {
             </select>
           </div>
 
-          {/*期限*/}
           <div>
             <label
               htmlFor="deadline"
@@ -397,7 +410,6 @@ const App = () => {
             />
           </div>
 
-          {/*説明*/}
           <div>
             <label
               htmlFor="description"
@@ -415,7 +427,6 @@ const App = () => {
             />
           </div>
 
-          {/*追加ボタン*/}
           <div>
             <button
               type="submit"
@@ -428,7 +439,6 @@ const App = () => {
         </div>
       </form>
 
-      {/*付箋エリア*/}
       <div className="flex-grow relative overflow-hidden p-8">
         <TodoList
           todos={todos}
@@ -439,7 +449,6 @@ const App = () => {
         />
       </div>
 
-      {/*ゴミ箱*/}
       <div
         ref={trashAreaRef}
         className={twMerge(
