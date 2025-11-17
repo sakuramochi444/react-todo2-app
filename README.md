@@ -11,6 +11,6 @@ https://sakuramochi444.github.io/react-todo2-app/
 
 ## あとがき
 
-!["Todo画像1"](".\images\todo1.png")
-!["Todo画像2"](".\images\todo2.png")
-!["Todo画像3"](".\images\todo3.png")
+!["Todo画像1"]("\images\todo1.png")
+!["Todo画像2"]("\images\todo2.png")
+!["Todo画像3"]("\images\todo3.png")
